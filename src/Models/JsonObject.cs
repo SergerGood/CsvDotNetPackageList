@@ -2,7 +2,7 @@ namespace CsvDotNetPackageList.Models;
 
 public record JsonObject(int Version, string Parameters, List<Project> Projects);
 
-public record Project(string Path, List<Framework> Frameworks);
+public record Project(string Path, List<Framework>? Frameworks);
 
 public record Framework(
     string framework,

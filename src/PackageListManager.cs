@@ -20,8 +20,8 @@ public sealed class PackageListManager
 
     private static IEnumerable<Package> GetPackages(JsonObject deserializedObject)
     {
-        return deserializedObject.Projects
-            .SelectMany(project => project.Frameworks
+        return deserializedObject.Projects.Where(x => x.Frameworks is not null)
+            .SelectMany(project => project.Frameworks!
                 .SelectMany(framework =>
                 {
                     if (framework.TransitivePackages is null)
