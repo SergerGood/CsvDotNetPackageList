@@ -18,7 +18,11 @@ CsvDotNetPackageList is a .NET utility designed to generate a CSV file containin
 - Framework: Specifies the target framework to analyze.
 - WorkingDirectory: Defines the directory where the solution or project files are located. If left empty, the current directory is used.
 - Sources: 
-    
+
+### Example Configuration
+
+To customize the behavior of the tool, you can modify the appsettings.json file as follows:
+
 ```json
 {
   "DotNetListSettings": {
@@ -28,4 +32,14 @@ CsvDotNetPackageList is a .NET utility designed to generate a CSV file containin
     ]
   }
 }
+```
+## Usage
+
+After configuring appsettings.json, run the tool.
+
+The tool will generate a packages.csv file in the specified working directory with the following structure:
+
+```csv
+Newtonsoft.Json;13.0.1
+Serilog;2.10.0
 ```
