@@ -1,27 +1,36 @@
 using System.Text;
 using CsvDotNetPackageList.Configuration;
 using CsvDotNetPackageList.Models;
+using Microsoft.Extensions.Options;
+using Spectre.Console;
 using static SimpleExec.Command;
 
 namespace CsvDotNetPackageList;
 
-public sealed class PackageListManager
+public sealed class PackageListManager(
+    IOptions<DotNetListSettings> settings,
+    ProgressRunner progressRunner)
 {
-    public async IAsyncEnumerable<Package> ProcessAsync(DotNetListSettings settings)
+    public async IAsyncEnumerable<Package> ProcessAsync()
     {
-        await foreach (var stdout in GetProcessesStdoutAsync(settings))
+        var (progress, task) = progressRunner.Start();
+
+        await foreach (var stdout in GetProcessesStdoutAsync(progress))
         {
             var deserializedObject = Serializer.Deserialize<JsonObject>(stdout);
-
+            
             foreach (var package in GetPackages(deserializedObject))
                 yield return package;
         }
+
+        progress.StopTask();
+        await task;
     }
 
     private static IEnumerable<Package> GetPackages(JsonObject deserializedObject)
     {
         return deserializedObject.Projects.Where(x => x.Frameworks is not null)
-            .SelectMany(project => project.Frameworks!
+            .SelectMany(project => project.Frameworks)
                 .SelectMany(framework =>
                 {
                     if (framework.TransitivePackages is null)
@@ -29,28 +38,31 @@ public sealed class PackageListManager
 
                     return framework.TransitivePackages.Select(x => new Package(x.Id, x.ResolvedVersion))
                         .Concat(framework.TopLevelPackages.Select(x => new Package(x.Id, x.ResolvedVersion)));
-                }));
+                });
     }
 
 
-    private static async IAsyncEnumerable<string> GetProcessesStdoutAsync(DotNetListSettings settings)
+    private async IAsyncEnumerable<string> GetProcessesStdoutAsync(ProgressTask progress)
     {
-        foreach (var source in settings.Sources)
+        foreach (var source in settings.Value.Sources)
         {
-            if (string.IsNullOrEmpty(source)) continue;
+            progress.Increment(1);
 
-            yield return await RunProcessAndGetStdout(settings, source);
+            if (string.IsNullOrEmpty(source) || !File.Exists(source))
+                continue;
+
+            yield return await RunProcessAndGetStdout(source);
         }
     }
 
-    private static async Task<string> RunProcessAndGetStdout(DotNetListSettings settings, string source)
+    private async Task<string> RunProcessAndGetStdout(string source)
     {
-        var frameworkArgument = settings.Framework is null
+        var frameworkArgument = settings.Value.Framework is null
             ? string.Empty
-            : $"--framework {settings.Framework}";
+            : $"--framework {settings.Value.Framework}";
 
         var arguments = $"list {source} package --include-transitive --format json {frameworkArgument}";
-        var workingDirectory = settings.WorkingDirectory ?? Directory.GetCurrentDirectory();
+        var workingDirectory = settings.Value.WorkingDirectory ?? Directory.GetCurrentDirectory();
 
         var (stdout, _) = await ReadAsync("dotnet", arguments, workingDirectory, encoding: Encoding.UTF8);
         return stdout;
