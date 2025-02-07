@@ -1,11 +1,13 @@
 using CsvDotNetPackageList;
 using CsvDotNetPackageList.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-var settingsLoader = new SettingsLoader();
-var settings = settingsLoader.Get<DotNetListSettings>();
+var serviceProvider = new ServiceCollection()
+    .AddSingleton<ProgressRunner>()
+    .AddSingleton<PackageListManager>()
+    .AddSingleton<CsvGenerator>()
+    .Configure()
+    .BuildServiceProvider();
 
-var packageListManager = new PackageListManager();
-var packages = packageListManager.ProcessAsync(settings);
-
-var csvGenerator = new CsvGenerator();
-await csvGenerator.RunAsync(packages);
+var csvGenerator = serviceProvider.GetRequiredService<CsvGenerator>();
+await csvGenerator.RunAsync();
