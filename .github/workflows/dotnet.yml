@@ -23,23 +23,25 @@ jobs:
       
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.x.x
+        
     - name: Publish
       run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true -p:AssemblyName=csv-package-list -o out
+   
     - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1.14.0
       with:
-        tag_name: ${{ github.run_number }}
-        release_name: Release ${{ github.ref }}
-        body: New Release.
-        draft: false
-        prerelease: false
+        # An optional flag which indicates if we should update a release if it already exists. Defaults to false.
+        allowUpdates: true 
+        # An optional set of paths representing artifacts to upload to the release. This may be a single path or a comma delimited list of paths (or globs)
+        artifacts: ./out
+        # An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).
+        tag: ${{ github.run_number }}
+
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
