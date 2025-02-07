@@ -1,15 +1,15 @@
-using CsvDotNetPackageList.Models;
-
 namespace CsvDotNetPackageList;
 
-public sealed class CsvGenerator
+public sealed class CsvGenerator(PackageListManager packageListManager)
 {
-    public async Task RunAsync(IAsyncEnumerable<Package> packages)
+    public async Task RunAsync()
     {
+        var packages = packageListManager.ProcessAsync();
+
         var uniquePackages = packages.Distinct()
             .OrderBy(x => x.Id)
             .ThenBy(x => x.Version);
-        
+
         await using var writer = new StreamWriter("packages.csv", false);
         
         await foreach (var uniquePackage in uniquePackages)
