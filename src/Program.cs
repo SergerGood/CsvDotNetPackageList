@@ -6,7 +6,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<ProgressRunner>()
     .AddSingleton<PackageListManager>()
     .AddSingleton<CsvGenerator>()
-    .Configure()
+    .ConfigureSettings()
     .BuildServiceProvider();
 
 var csvGenerator = serviceProvider.GetRequiredService<CsvGenerator>();

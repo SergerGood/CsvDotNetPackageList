@@ -5,7 +5,7 @@ namespace CsvDotNetPackageList.Configuration;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection Configure(this IServiceCollection services)
+    public static IServiceCollection ConfigureSettings(this IServiceCollection services)
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", true, true)

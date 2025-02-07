@@ -11,7 +11,8 @@ public sealed class ProgressRunner(IOptions<DotNetListSettings> settings)
         new TaskDescriptionColumn(),
         new ProgressBarColumn(),
         new PercentageColumn(),
-        new SpinnerColumn()
+        new SpinnerColumn(),
+        new ElapsedTimeColumn()
     ];
 
     public (ProgressTask progress, Task task) Start()
@@ -22,8 +23,10 @@ public sealed class ProgressRunner(IOptions<DotNetListSettings> settings)
             .Columns(_progressColumns)
             .StartAsync(async context =>
             {
-                progress = context.AddTask("Processing", true, settings.Value.Sources.Count);
-                while (!context.IsFinished) await Task.Delay(100);
+                progress = context.AddTask("[blue]Processing[/]", true, settings.Value.Sources.Count);
+                
+                while (!context.IsFinished) 
+                    await Task.Delay(100);
             });
 
         return (progress, task);
