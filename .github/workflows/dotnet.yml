@@ -38,9 +38,10 @@ jobs:
         # An optional flag which indicates if we should update a release if it already exists. Defaults to false.
         allowUpdates: true 
         # An optional set of paths representing artifacts to upload to the release. This may be a single path or a comma delimited list of paths (or globs)
-        artifacts: ./out
+        artifacts: out
         # An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).
         tag: ${{ github.run_number }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
