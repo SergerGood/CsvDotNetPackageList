@@ -1,6 +1,8 @@
 namespace CsvDotNetPackageList.Configuration;
 
-public record DotNetListSettings(
-    string? Framework,
-    string? WorkingDirectory,
-    IReadOnlyList<string> Sources);
+public sealed class DotNetListSettings
+{
+    public string? Framework { get; init; }
+    public string? WorkingDirectory { get; init; }
+    public IReadOnlyList<string> Sources { get; init; }
+}
