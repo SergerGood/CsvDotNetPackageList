@@ -33,7 +33,7 @@ jobs:
       run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true -p:AssemblyName=csv-package-list -o out
    
     - name: Create Release
-      uses: ncipollo/release-action@v1.15.0
+      uses: ncipollo/release-action@v1.16.0
       with:
         # An optional flag which indicates if we should update a release if it already exists. Defaults to false.
         allowUpdates: true 
