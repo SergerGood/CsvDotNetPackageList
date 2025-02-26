@@ -1,1 +1,1 @@
-dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true -p:AssemblyName=csv-package-list --property:OutputPath=out
+dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:WarningLevel=0 -v minima --self-contained true -p:AssemblyName=csv-package-list --property:OutputPath=out
