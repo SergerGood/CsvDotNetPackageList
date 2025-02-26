@@ -13,9 +13,9 @@ CsvDotNetPackageList is a .NET utility designed to generate a CSV file containin
 
 ### Configuration Options
 
-- Framework: Specifies the target framework to analyze.
-- WorkingDirectory: Defines the directory where the solution or project files are located. If left empty, the current directory is used.
-- Sources: 
+- **Framework** (_optional_): If not specified, the analysis will search for packages across all target frameworks.
+- **WorkingDirectory**: The base directory used for resolving relative paths and generating the final CSV output file.
+- **Sources** (_required_): A list of project or solution files to analyze. If absolute file paths are provided, WorkingDirectory will only be used when generating the final CSV report.
 
 ### Example Configuration
 
@@ -24,18 +24,43 @@ To customize the behavior of the tool, you can modify the appsettings.json file 
 ```json
 {
   "DotNetListSettings": {
-    "Framework": "net6.0",
+    "Framework": "net8.0",
     "WorkingDirectory": "C:\\Projects\\MySolution",
     "Sources": [
+      "Project1.csproj"
     ]
   }
 }
 ```
+
+```json
+{
+  "DotNetListSettings": {
+    "Framework": "net8.0",
+    "Sources": [
+      "./src/Project1.csproj",
+      "./src/Project2.csproj"
+    ],
+  }
+}
+```
+
 ## Usage
 
-After configuring appsettings.json, run the tool.
+Follow these steps to use the application:
 
-The tool will generate a packages.csv file in the specified working directory with the following structure:
+1. Clone the repository:
+```bash
+git clone https://github.com/SergerGood/CsvDotNetPackageList.git
+cd CsvDotNetPackageList
+```
+2. Publish the application:
+```bash
+./publish.sh
+```
+3. Configure the application by modifying appsettings.json according to your needs.
+4. Run the tool using the generated **csv-package-list** executable and analyze the dependencies.
+5. The tool will generate a packages.csv file in the specified working directory with the following structure:
 
 ```csv
 Newtonsoft.Json;13.0.1
