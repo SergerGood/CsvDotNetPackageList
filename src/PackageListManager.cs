@@ -48,7 +48,13 @@ public sealed class PackageListManager(
         {
             progress.Increment(1);
 
-            if (string.IsNullOrEmpty(source) || !File.Exists(source))
+            var filePath = source;
+            if (!string.IsNullOrEmpty(settings.Value.WorkingDirectory))
+            {
+                filePath = Path.Combine(settings.Value.WorkingDirectory, source);
+            }
+            
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
                 continue;
 
             yield return await RunProcessAndGetStdout(source);
