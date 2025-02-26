@@ -19,7 +19,7 @@ CsvDotNetPackageList is a .NET utility designed to generate a CSV file containin
 
 ### Example Configuration
 
-To customize the behavior of the tool, you can modify the appsettings.json file as follows:
+To customize the behavior of the tool, you can modify the `appsettings.json` file as follows:
 
 ```json
 {
@@ -53,13 +53,13 @@ Follow these steps to use the application:
 ```bash
 git clone https://github.com/SergerGood/CsvDotNetPackageList.git
 ```
-2. Publish the application. The result will be in subfolder _out_.
+2. Publish the application. The result will be in subfolder `out`.
 ```bash
 ./publish.sh
 ```
-3. Configure the application by modifying _appsettings.json_ according to your needs.
-4. Run the tool using the generated _csv-package-list_ executable and analyze the dependencies.
-5. The tool will generate a _packages.csv_ file in the specified working directory with the following structure:
+3. Configure the application by modifying `appsettings.json` according to your needs.
+4. Run the tool using the generated `csv-package-list` executable and analyze the dependencies.
+5. The tool will generate a `packages.csv` file in the specified working directory with the following structure:
 ```csv
 Newtonsoft.Json;13.0.1
 Serilog;2.10.0
