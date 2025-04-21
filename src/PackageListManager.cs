@@ -29,33 +29,49 @@ public sealed class PackageListManager(
 
     private static IEnumerable<Package> GetPackages(JsonObject deserializedObject)
     {
-        return deserializedObject.Projects.Where(x => x.Frameworks is not null)
-            .SelectMany(project => project.Frameworks)
-                .SelectMany(framework =>
-                {
-                    if (framework.TransitivePackages is null)
-                        return framework.TopLevelPackages.Select(x => new Package(x.Id, x.ResolvedVersion));
+        foreach (var project in deserializedObject.Projects)
+        {
+            if (project.Frameworks is null)
+            {
+                AnsiConsole.MarkupLine($"[yellow]Project was skipped by Framework:[/][bold yellow] {project.Path}[/]");
+            }
+            else
+            {
+                return project.Frameworks
+                    .SelectMany(framework =>
+                    {
+                        if (framework.TransitivePackages is null)
+                            return framework.TopLevelPackages.Select(x => new Package(x.Id, x.ResolvedVersion));
 
-                    return framework.TransitivePackages.Select(x => new Package(x.Id, x.ResolvedVersion))
-                        .Concat(framework.TopLevelPackages.Select(x => new Package(x.Id, x.ResolvedVersion)));
-                });
+                        return framework.TransitivePackages.Select(x => new Package(x.Id, x.ResolvedVersion))
+                            .Concat(framework.TopLevelPackages.Select(x => new Package(x.Id, x.ResolvedVersion)));
+                    });
+            }
+        }
+
+        return [];
     }
 
 
     private async IAsyncEnumerable<string> GetProcessesStdoutAsync(ProgressTask progress)
     {
+        var workingDirectory = settings.Value.WorkingDirectory;
+        
         foreach (var source in settings.Value.Sources)
         {
             progress.Increment(1);
 
             var filePath = source;
-            if (!string.IsNullOrEmpty(settings.Value.WorkingDirectory))
+            if (!string.IsNullOrEmpty(workingDirectory) && !source.Contains(workingDirectory))
             {
-                filePath = Path.Combine(settings.Value.WorkingDirectory, source);
+                filePath = Path.Combine(workingDirectory, source);
             }
-            
+
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                AnsiConsole.MarkupLine($"[yellow]File was not found:[/][bold yellow] {filePath}[/]");
                 continue;
+            }
 
             yield return await RunProcessAndGetStdout(source);
         }
