@@ -55,7 +55,11 @@ git clone https://github.com/SergerGood/CsvDotNetPackageList.git
 ```
 2. Publish the application. The result will be in subfolder `out`.
 ```bash
-./publish.sh
+./publish-win.sh
+```
+or
+```bash
+./publish-linux.sh
 ```
 3. Configure the application by modifying `appsettings.json` according to your needs.
 4. Run the tool using the generated `csv-package-list` executable and analyze the dependencies.
