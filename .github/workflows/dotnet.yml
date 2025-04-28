@@ -39,4 +39,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
           retention-days: 2
-          path: out/${{ matrix.target }}
+          path: ${{ github.workspace }}/src/out/${{ matrix.target }}
