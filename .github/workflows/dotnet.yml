@@ -33,6 +33,17 @@ jobs:
         dotnet-version: 9.x.x
         
     - name: Publish
-      run: dotnet publish -c Release -p:AssemblyName=csv-package-list -o out -r ${{ matrix.target }} -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true 
-   
+      run: dotnet publish -c Release -p:AssemblyName=csv-package-list --property:PublishDir=out/${{ matrix.target }} -r ${{ matrix.target }} -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true 
 
+    - name: Archive Release
+      uses: thedoctor0/zip-release@main
+      with:
+         type: 'zip'
+         filename: 'csv-package-list-${{ matrix.target }}.zip'
+         directory: out/${{ matrix.target }}
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+          name: artifacts
+          path: csv-package-list-${{ matrix.target }}.zip
