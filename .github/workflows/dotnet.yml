@@ -43,7 +43,7 @@ jobs:
          directory: out/${{ matrix.target }}
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
           name: artifacts
           path: csv-package-list-${{ matrix.target }}.zip
