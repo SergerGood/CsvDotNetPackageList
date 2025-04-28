@@ -11,15 +11,18 @@ on:
 
 jobs:
   build:
-
-    runs-on: windows-latest
-
-    permissions:
-      contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
+    
+    strategy:
+      matrix:
+        kind: ['linux', 'windows']
+        include:
+          - kind: linux
+            os: ubuntu-latest
+            target: linux-x64
+          - kind: windows
+            os: windows-latest
+            target: win-x64
+    runs-on: ${{ matrix.os }}
       
     steps:
     - uses: actions/checkout@v4
@@ -30,25 +33,6 @@ jobs:
         dotnet-version: 9.x.x
         
     - name: Publish
-      run: dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true -p:AssemblyName=csv-package-list -o out
+      run: dotnet publish -c Release -p:AssemblyName=csv-package-list -o out -r ${{ matrix.target }} -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true 
    
-    - name: Create Release
-      uses: ncipollo/release-action@v1.16.0
-      with:
-        # An optional flag which indicates if we should update a release if it already exists. Defaults to false.
-        allowUpdates: true 
-        # An optional set of paths representing artifacts to upload to the release. This may be a single path or a comma delimited list of paths (or globs)
-        artifacts: out
-        # An optional tag for the release. If this is omitted the git ref will be used (if it is a tag).
-        tag: ${{ github.run_number }}
-        token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./${{ secrets.ReleaseZipName }}.zip
-        asset_name: ${{ secrets.ReleaseZipName }}.zip
-        asset_content_type: application/zip
