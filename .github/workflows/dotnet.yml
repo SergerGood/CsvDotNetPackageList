@@ -41,8 +41,8 @@ jobs:
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.6
       with:
-        type: 'tar'
-        filename: 'csv-package-list-${{ matrix.target }}'
+        type: 'zip'
+        filename: 'csv-package-list-${{ matrix.target }}.zip'
         directory: ${{ github.workspace }}/src/out/${{ matrix.target }}
         
     - name: Upload artifacts
