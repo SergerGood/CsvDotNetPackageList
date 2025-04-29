@@ -44,15 +44,26 @@ jobs:
           retention-days: 2
           path: ${{ github.workspace }}/src/out/${{ matrix.target }}
           name: csv-package-list-${{ matrix.target }}
+  
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
 
+    - name: Checkout
+      uses: actions/checkout@v4
+      
     - name: Download Artifacts 
       uses: actions/download-artifact@v4
       with:
-          name: csv-package-list-${{ matrix.target }}
-          
+          name: csv-package-list-*
+    
+    - name: LS
+      run: ls -al
+        
     - name: Create Release
       uses: ncipollo/release-action@v1.16.0
       with:
         allowUpdates: true 
-        artifacts: ${{ github.workspace }}/csv-package-list-${{ matrix.target }}
+        artifacts: ${{ github.workspace }}/csv-package-list-*
         tag: ${{ github.run_number }}
