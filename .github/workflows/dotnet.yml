@@ -40,3 +40,4 @@ jobs:
       with:
           retention-days: 2
           path: ${{ github.workspace }}/src/out/${{ matrix.target }}
+          name: csv-package-list-${{ matrix.target }}
