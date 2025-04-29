@@ -56,10 +56,12 @@ jobs:
     - name: Download Artifacts 
       uses: actions/download-artifact@v4
       with:
-          name: csv-package-list-*
+          pattern: csv-package-list-*
+          path: ${{ github.workspace }}/artifacts
+          merge-multiple: 'true'
     
     - name: LS
-      run: ls -al
+      run: ls -R ${{ github.workspace }}/artifacts
         
     - name: Create Release
       uses: ncipollo/release-action@v1.16.0
