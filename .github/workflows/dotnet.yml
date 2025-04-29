@@ -44,3 +44,10 @@ jobs:
           retention-days: 2
           path: ${{ github.workspace }}/src/out/${{ matrix.target }}
           name: csv-package-list-${{ matrix.target }}
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1.16.0
+      with:
+        allowUpdates: true 
+        artifacts: "artifacts/*.zip"
+        tag: ${{ github.run_number }}
