@@ -6,6 +6,8 @@ CsvDotNetPackageList is a .NET utility designed to generate a CSV file containin
 
 - Scans a .NET solution to identify all referenced NuGet packages.
 - Generates a CSV file listing each package's ID and version.
+- Supports analyzing multiple source files or solutions.
+- Includes progress reporting for visibility during execution.
 - Configurable execution via `appsettings.json`.
 - Simple and straightforward command-line interface.
 
