@@ -45,9 +45,14 @@ jobs:
           path: ${{ github.workspace }}/src/out/${{ matrix.target }}
           name: csv-package-list-${{ matrix.target }}
 
+    - name: Download Artifacts 
+      uses: actions/download-artifact@v4
+      with:
+          name: csv-package-list-${{ matrix.target }}
+          
     - name: Create Release
       uses: ncipollo/release-action@v1.16.0
       with:
         allowUpdates: true 
-        artifacts: "artifacts/*.zip"
+        artifacts: "*.zip"
         tag: ${{ github.run_number }}
