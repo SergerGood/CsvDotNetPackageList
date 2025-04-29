@@ -54,5 +54,5 @@ jobs:
       uses: ncipollo/release-action@v1.16.0
       with:
         allowUpdates: true 
-        artifacts: "*.zip"
+        artifacts: ${{ github.workspace }}/csv-package-list-${{ matrix.target }}
         tag: ${{ github.run_number }}
