@@ -50,7 +50,7 @@ jobs:
       with:
           retention-days: 1
           path: ${{ github.workspace }}/src/out/${{ matrix.target }}
-          name: artifacts-${{ matrix.target }}
+          name: artifacts-${{ matrix.target }}-${{ github.run_number }}
   
   release:
     needs: [build]
@@ -65,7 +65,7 @@ jobs:
     - name: Download Artifacts 
       uses: actions/download-artifact@v4
       with:
-          pattern: artifacts-*
+          pattern: artifacts-*-${{ github.run_number }}
           path: ${{ github.workspace }}/artifacts
           merge-multiple: 'true'
 
