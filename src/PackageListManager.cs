@@ -18,9 +18,11 @@ public sealed class PackageListManager(
         await foreach (var stdout in GetProcessesStdoutAsync(progress))
         {
             var deserializedObject = Serializer.Deserialize<JsonObject>(stdout);
-            
+
             foreach (var package in GetPackages(deserializedObject))
+            {
                 yield return package;
+            }
         }
 
         progress.StopTask();
@@ -41,7 +43,9 @@ public sealed class PackageListManager(
                     .SelectMany(framework =>
                     {
                         if (framework.TransitivePackages is null)
+                        {
                             return framework.TopLevelPackages.Select(x => new Package(x.Id, x.ResolvedVersion));
+                        }
 
                         return framework.TransitivePackages.Select(x => new Package(x.Id, x.ResolvedVersion))
                             .Concat(framework.TopLevelPackages.Select(x => new Package(x.Id, x.ResolvedVersion)));
@@ -52,11 +56,10 @@ public sealed class PackageListManager(
         return [];
     }
 
-
     private async IAsyncEnumerable<string> GetProcessesStdoutAsync(ProgressTask progress)
     {
         var workingDirectory = settings.Value.WorkingDirectory;
-        
+
         foreach (var source in settings.Value.Sources)
         {
             progress.Increment(1);

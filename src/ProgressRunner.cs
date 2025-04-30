@@ -24,9 +24,11 @@ public sealed class ProgressRunner(IOptions<DotNetListSettings> settings)
             .StartAsync(async context =>
             {
                 progress = context.AddTask("[blue]Processing[/]", true, settings.Value.Sources.Count);
-                
-                while (!context.IsFinished) 
+
+                while (!context.IsFinished)
+                {
                     await Task.Delay(100);
+                }
             });
 
         return (progress, task);
