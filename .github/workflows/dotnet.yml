@@ -67,13 +67,10 @@ jobs:
           path: ${{ github.workspace }}/artifacts
           merge-multiple: 'true'
 
-    # TODO
-    - name: LS 
-      run: ls -R ${{ github.workspace }}/artifacts
-        
     - name: Create Release
       uses: ncipollo/release-action@v1.16.0
       with:
         allowUpdates: true 
-        artifacts: ${{ github.workspace }}/artifacts
-        tag: ${{ github.run_number }}
+        artifacts: ${{ github.workspace }}/artifacts/*.zip
+        tag: 1.0.0.${{ github.run_number }}
+        name: 1.0.0.${{ github.run_number }}
