@@ -50,22 +50,10 @@ To customize the behavior of the tool, you can modify the `appsettings.json` fil
 ## Usage
 
 Follow these steps to use the application:
-
-1. Clone the repository:
-```bash
-git clone https://github.com/SergerGood/CsvDotNetPackageList.git
-```
-2. Publish the application. The result will be in subfolder `out`.
-```bash
-./publish-win.sh
-```
-or
-```bash
-./publish-linux.sh
-```
-3. Configure the application by modifying `appsettings.json` according to your needs.
-4. Run the tool using the generated `csv-package-list` executable and analyze the dependencies.
-5. The tool will generate a `packages.csv` file in the specified working directory with the following structure:
+1. Download latest Release.
+2. Configure the application by modifying `appsettings.json` according to your needs.
+3. Run the tool using the generated `csv-package-list` executable and analyze the dependencies.
+4. The tool will generate a `packages.csv` file in the specified working directory with the following structure:
 ```csv
 Newtonsoft.Json;13.0.1
 Serilog;2.10.0
