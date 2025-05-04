@@ -1,7 +1,3 @@
-using CsvDotNetPackageList;
-using CsvDotNetPackageList.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 var serviceProvider = new ServiceCollection()
     .AddSingleton<ProgressRunner>()
     .AddSingleton<PackageListManager>()

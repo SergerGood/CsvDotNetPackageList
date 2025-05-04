@@ -1,6 +1,4 @@
-using Spectre.Console;
-
-namespace CsvDotNetPackageList;
+namespace CsvDotNetPackageList.Services;
 
 public sealed class CsvGenerator(PackageListManager packageListManager)
 {
@@ -8,7 +6,7 @@ public sealed class CsvGenerator(PackageListManager packageListManager)
 
     public async Task RunAsync()
     {
-        var packages = packageListManager.ProcessAsync();
+        var packages = packageListManager.GetPackagesAsync();
 
         var uniquePackages = packages.Distinct()
             .OrderBy(x => x.Id)
@@ -22,6 +20,7 @@ public sealed class CsvGenerator(PackageListManager packageListManager)
             await writer.WriteLineAsync(packageCsvLine);
         }
 
-        AnsiConsole.MarkupLine($"[green]CSV file generated:[/][bold green] {OutputFileName}[/]");
+        var outputFilePath = Path.Combine(Directory.GetCurrentDirectory(), OutputFileName);
+        AnsiConsole.MarkupLine($"[green]CSV file generated:[/][bold green] {outputFilePath}[/]");
     }
 }

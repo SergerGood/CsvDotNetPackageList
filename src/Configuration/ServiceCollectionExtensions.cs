@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace CsvDotNetPackageList.Configuration;
 
 public static class ServiceCollectionExtensions

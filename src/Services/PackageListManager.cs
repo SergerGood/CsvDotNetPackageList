@@ -1,23 +1,17 @@
-using System.Text;
-using CsvDotNetPackageList.Configuration;
-using CsvDotNetPackageList.Models;
-using Microsoft.Extensions.Options;
-using Spectre.Console;
 using static SimpleExec.Command;
 
-namespace CsvDotNetPackageList;
+namespace CsvDotNetPackageList.Services;
 
-public sealed class PackageListManager(
-    IOptions<DotNetListSettings> settings,
-    ProgressRunner progressRunner)
+public sealed class PackageListManager(IOptions<DotNetListSettings> settings, ProgressRunner progressRunner)
 {
-    public async IAsyncEnumerable<Package> ProcessAsync()
+    public async IAsyncEnumerable<Package> GetPackagesAsync()
     {
         var (progress, task) = progressRunner.Start();
 
         await foreach (var stdout in GetProcessesStdoutAsync(progress))
         {
             var deserializedObject = Serializer.Deserialize<JsonObject>(stdout);
+            if (deserializedObject == null) continue;
 
             foreach (var package in GetPackages(deserializedObject))
             {
@@ -31,6 +25,11 @@ public sealed class PackageListManager(
 
     private static IEnumerable<Package> GetPackages(JsonObject deserializedObject)
     {
+        if (deserializedObject.Projects.Count == 0)
+        {
+            AnsiConsole.MarkupLine($"[yellow]Projects was skipped by Framework[/][bold yellow][/]");
+        }
+
         foreach (var project in deserializedObject.Projects)
         {
             if (project.Frameworks is null)
@@ -58,6 +57,8 @@ public sealed class PackageListManager(
 
     private async IAsyncEnumerable<string> GetProcessesStdoutAsync(ProgressTask progress)
     {
+        if (settings.Value.Sources == null) yield break;
+
         var workingDirectory = settings.Value.WorkingDirectory;
 
         foreach (var source in settings.Value.Sources)
@@ -87,7 +88,9 @@ public sealed class PackageListManager(
             : $"--framework {settings.Value.Framework}";
 
         var arguments = $"list {source} package --include-transitive --format json {frameworkArgument}";
-        var workingDirectory = settings.Value.WorkingDirectory ?? Directory.GetCurrentDirectory();
+        var workingDirectory = string.IsNullOrEmpty(settings.Value.WorkingDirectory)
+            ? string.Empty
+            : settings.Value.WorkingDirectory;
 
         var (stdout, _) = await ReadAsync("dotnet", arguments, workingDirectory, encoding: Encoding.UTF8);
         return stdout;

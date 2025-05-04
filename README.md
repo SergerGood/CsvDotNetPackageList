@@ -16,8 +16,8 @@ CsvDotNetPackageList is a .NET utility designed to generate a CSV file containin
 ### Configuration Options
 
 - **Framework** (_optional_): If not specified, the analysis will search for packages across all target frameworks.
-- **WorkingDirectory** (_optional_): The base directory used for resolving relative paths and generating the final CSV output file.
-- **Sources** (_required_): A list of project or solution files to analyze. If absolute file paths are provided, WorkingDirectory will only be used when generating the final CSV report.
+- **WorkingDirectory** (_required for solution_): The base directory used for resolving relative paths.
+- **Sources** (_required_): A list of project or solution files to analyze. For projects, you can specify the full path without specifying the WorkingDirectory option.
 
 ### Example Configuration
 
@@ -27,8 +27,9 @@ To customize the behavior of the tool, you can modify the `appsettings.json` fil
 {
   "DotNetListSettings": {
     "Framework": "net8.0",
+    "WorkingDirectory": "C:\\Projects\\MySolution",
     "Sources": [
-      "C:\\Projects\\MySolution.sln"
+      "MySolution.sln"
     ]
   }
 }
@@ -38,11 +39,10 @@ To customize the behavior of the tool, you can modify the `appsettings.json` fil
 {
   "DotNetListSettings": {
     "Framework": "net8.0",
-    "WorkingDirectory": "C:\\Projects\\MySolution",
     "Sources": [
-      "Project1.csproj",
-      "Project2.csproj"
-    ],
+      "C:\\Projects\\MySolution\\Project1.csproj",
+      "C:\\Projects\\MySolution\\Project2.csproj"
+    ]
   }
 }
 ```
