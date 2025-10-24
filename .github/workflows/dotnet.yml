@@ -58,7 +58,7 @@ jobs:
     
     steps:
     - name: Download Artifacts 
-      uses: actions/download-artifact@v5
+      uses: actions/download-artifact@v6
       with:
           pattern: artifacts-*-${{ github.run_number }}
           path: ${{ github.workspace }}/artifacts
