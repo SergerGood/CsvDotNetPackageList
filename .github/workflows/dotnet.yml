@@ -28,7 +28,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: 9.x.x
+        dotnet-version: 10.x.x
         
     - name: Publish
       run: dotnet publish -c Release -p:AssemblyName=csv-package-list --property:PublishDir=out -r ${{ matrix.target }} -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --self-contained true 
